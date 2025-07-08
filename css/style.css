@@ -1,60 +1,19 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* === Reset === */
 
-body, html {
-  height: 100%;
-  background-color: #ffffff;
-  font-family: sans-serif;
-  overflow: hidden;
-}
+{ margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Fixed PKMKB Logo */
-#logo-fixed {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 20;
-  pointer-events: none;
-}
 
-#logo-fixed img {
-  width: 200px;
-  height: auto;
-}
+html, body { width: 100%; height: 100%; overflow: hidden; background-color: #ffffff; font-family: sans-serif; }
 
-/* Zoom Info */
-#zoom-info {
-  position: fixed;
-  top: 15px;
-  right: 20px;
-  background: #000;
-  color: #fff;
-  padding: 5px 12px;
-  font-size: 14px;
-  border-radius: 8px;
-  z-index: 10;
-}
+/* === Wall Frame === */ #wall-frame { position: relative; width: 100%; height: 100%; border: 40px solid #333; background-color: #ffffff; }
 
-/* Wall Frame */
-#wall-frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 40px solid #333;
-  background-color: #ffffff;
-  z-index: 1;
-}
+canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; }
 
-/* Canvas */
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: crosshair;
-}
+/* PKMKB Logo Layer */ #logoCanvas { z-index: 3; pointer-events: none; }
+
+/* Drawing Layer */ #drawCanvas { z-index: 2; }
+
+/* Background Layer */ #bgCanvas { z-index: 1; }
+
+/* Zoom Display */ #zoom-info { position: fixed; top: 15px; right: 20px; background: #000; color: #fff; padding: 5px 12px; font-size: 14px; border-radius: 8px; z-index: 10; user-select: none; font-weight: bold; }
+
