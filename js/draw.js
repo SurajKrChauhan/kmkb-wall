@@ -1,66 +1,70 @@
 const canvas = document.getElementById("drawCanvas");
 const ctx = canvas.getContext("2d");
-resize();
 
-window.addEventListener('resize', resize);
+let scale = 1;
+let originX = 0;
+let originY = 0;
+let isDrawing = false;
+let drawAllowed = false;
 
-function resize() {
+let lastX, lastY;
+
+resizeCanvas();
+
+window.addEventListener("resize", resizeCanvas);
+
+function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  drawScene();
 }
 
-let drawing = false;
+function drawScene() {
+  ctx.setTransform(scale, 0, 0, scale, originX, originY);
+}
 
-canvas.addEventListener("mousedown", start);
-canvas.addEventListener("touchstart", start, {passive: false});
-
-canvas.addEventListener("mouseup", stop);
-canvas.addEventListener("mouseout", stop);
-canvas.addEventListener("touchend", stop);
-
-canvas.addEventListener("mousemove", draw);
-canvas.addEventListener("touchmove", drawTouch, {passive: false});
-
-function start(e) {
-  drawing = true;
-  ctx.beginPath();
-  ctx.moveTo(getX(e), getY(e));
+canvas.addEventListener("wheel", (e) => {
   e.preventDefault();
-}
+  const delta = e.deltaY > 0 ? -0.05 : 0.05;
+  scale += delta;
+  scale = Math.max(1, Math.min(1000, scale));
 
-function stop(e) {
-  drawing = false;
-  ctx.beginPath();
-  e.preventDefault();
-}
+  drawAllowed = scale >= 10;
 
-function draw(e) {
-  if (!drawing) return;
-  ctx.lineWidth = 3;
+  drawScene();
+});
+
+canvas.addEventListener("mousedown", (e) => {
+  if (!drawAllowed) return;
+  isDrawing = true;
+  lastX = (e.clientX - originX) / scale;
+  lastY = (e.clientY - originY) / scale;
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (!isDrawing) return;
+  ctx.lineWidth = document.getElementById("sizePicker").value;
+  ctx.strokeStyle = document.getElementById("colorPicker").value;
   ctx.lineCap = "round";
-  ctx.strokeStyle = "#000";
 
-  ctx.lineTo(getX(e), getY(e));
-  ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(getX(e), getY(e));
-  e.preventDefault();
-}
+  ctx.moveTo(lastX, lastY);
+  const newX = (e.clientX - originX) / scale;
+  const newY = (e.clientY - originY) / scale;
+  ctx.lineTo(newX, newY);
+  ctx.stroke();
 
-function drawTouch(e) {
-  if (!drawing) return;
-  const touch = e.touches[0];
-  draw(touch);
-}
+  lastX = newX;
+  lastY = newY;
+});
 
-function getX(e) {
-  return e.clientX || e.touches[0].clientX;
-}
-
-function getY(e) {
-  return e.clientY || e.touches[0].clientY;
-}
+canvas.addEventListener("mouseup", () => {
+  isDrawing = false;
+});
+canvas.addEventListener("mouseout", () => {
+  isDrawing = false;
+});
 
 document.getElementById("clearBtn").addEventListener("click", () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(-originX / scale, -originY / scale, canvas.width / scale, canvas.height / scale);
 });
