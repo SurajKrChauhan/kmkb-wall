@@ -6,8 +6,10 @@ let originX = 0;
 let originY = 0;
 let isDrawing = false;
 let drawAllowed = false;
-
 let lastX, lastY;
+
+const wallWidth = 3000;
+const wallHeight = 3000;
 
 resizeCanvas();
 
@@ -21,16 +23,19 @@ function resizeCanvas() {
 
 function drawScene() {
   ctx.setTransform(scale, 0, 0, scale, originX, originY);
+  document.getElementById("zoom-info").textContent = `Zoom: ${Math.floor(scale)}x`;
+  drawAllowed = scale >= 500;
+}
+
+function isInsideWall(x, y) {
+  return x >= 0 && y >= 0 && x <= wallWidth && y <= wallHeight;
 }
 
 canvas.addEventListener("wheel", (e) => {
   e.preventDefault();
-  const delta = e.deltaY > 0 ? -0.05 : 0.05;
+  const delta = e.deltaY > 0 ? -0.5 : 0.5;
   scale += delta;
-  scale = Math.max(1, Math.min(1000, scale));
-
-  drawAllowed = scale >= 10;
-
+  scale = Math.max(1, Math.min(500, scale));
   drawScene();
 });
 
@@ -42,15 +47,19 @@ canvas.addEventListener("mousedown", (e) => {
 });
 
 canvas.addEventListener("mousemove", (e) => {
-  if (!isDrawing) return;
+  if (!isDrawing || !drawAllowed) return;
+
+  const newX = (e.clientX - originX) / scale;
+  const newY = (e.clientY - originY) / scale;
+
+  if (!isInsideWall(newX, newY)) return;
+
   ctx.lineWidth = document.getElementById("sizePicker").value;
   ctx.strokeStyle = document.getElementById("colorPicker").value;
   ctx.lineCap = "round";
 
   ctx.beginPath();
   ctx.moveTo(lastX, lastY);
-  const newX = (e.clientX - originX) / scale;
-  const newY = (e.clientY - originY) / scale;
   ctx.lineTo(newX, newY);
   ctx.stroke();
 
@@ -58,12 +67,8 @@ canvas.addEventListener("mousemove", (e) => {
   lastY = newY;
 });
 
-canvas.addEventListener("mouseup", () => {
-  isDrawing = false;
-});
-canvas.addEventListener("mouseout", () => {
-  isDrawing = false;
-});
+canvas.addEventListener("mouseup", () => isDrawing = false);
+canvas.addEventListener("mouseout", () => isDrawing = false);
 
 document.getElementById("clearBtn").addEventListener("click", () => {
   ctx.clearRect(-originX / scale, -originY / scale, canvas.width / scale, canvas.height / scale);
