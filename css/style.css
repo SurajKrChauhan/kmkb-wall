@@ -1,0 +1,40 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  background: white;
+  height: 100%;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.logo {
+  width: 50vw;
+  opacity: 0.15;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  user-select: none;
+  pointer-events: none;
+}
+
+#clearBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  z-index: 2;
+  cursor: pointer;
+}
