@@ -6,10 +6,10 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <!-- Fixed PKMKB Logo -->
-  <div id="logo-fixed">
-    <img src="assets/PKMKB.png" alt="PKMKB Logo" />
-  </div>  <!-- Zoom Info Display -->  <div id="zoom-info">Zoom: 1x</div>  <!-- Drawing Canvas -->  <div id="wall-frame">
-    <canvas id="drawCanvas"></canvas>
+  <!-- Zoom Info Display -->
+  <div id="zoom-info">Zoom: 1x</div>  <!-- Drawing Canvases -->  <div id="wall-frame">
+    <canvas id="bgCanvas"></canvas>       <!-- Background + Wall -->
+    <canvas id="drawCanvas"></canvas>     <!-- Drawing Layer -->
+    <canvas id="logoCanvas"></canvas>     <!-- PKMKB Logo (Fixed) -->
   </div>  <!-- JavaScript -->  <script src="js/draw.js"></script></body>
 </html>
