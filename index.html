@@ -3,125 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>PKMKB Wall</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      background: white;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-
-    .center-text {
-      position: absolute;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 10vw;
-      font-weight: bold;
-      font-family: Arial, sans-serif;
-      color: rgba(0, 0, 0, 0.15);
-      z-index: 0;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    #clearBtn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 10px 15px;
-      font-size: 1rem;
-      background: black;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      z-index: 2;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="center-text">PKMKB</div>
+<div class="center-text">
+  <img src="assets/PKMKB.png" alt="PKMKB" class="logo">
+</div>
+
 <canvas id="drawCanvas"></canvas>
 <button id="clearBtn">Clear</button>
 
-<script>
-  const canvas = document.getElementById("drawCanvas");
-  const ctx = canvas.getContext("2d");
-  resize();
-
-  window.addEventListener('resize', resize);
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  let drawing = false;
-
-  canvas.addEventListener("mousedown", start);
-  canvas.addEventListener("touchstart", start, {passive: false});
-
-  canvas.addEventListener("mouseup", stop);
-  canvas.addEventListener("mouseout", stop);
-  canvas.addEventListener("touchend", stop);
-
-  canvas.addEventListener("mousemove", draw);
-  canvas.addEventListener("touchmove", drawTouch, {passive: false});
-
-  function start(e) {
-    drawing = true;
-    ctx.beginPath();
-    ctx.moveTo(getX(e), getY(e));
-    e.preventDefault();
-  }
-
-  function stop(e) {
-    drawing = false;
-    ctx.beginPath();
-    e.preventDefault();
-  }
-
-  function draw(e) {
-    if (!drawing) return;
-    ctx.lineWidth = 3;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "#000";
-
-    ctx.lineTo(getX(e), getY(e));
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(getX(e), getY(e));
-    e.preventDefault();
-  }
-
-  function drawTouch(e) {
-    if (!drawing) return;
-    const touch = e.touches[0];
-    draw(touch);
-  }
-
-  function getX(e) {
-    return e.clientX || e.touches[0].clientX;
-  }
-
-  function getY(e) {
-    return e.clientY || e.touches[0].clientY;
-  }
-
-  document.getElementById("clearBtn").addEventListener("click", () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  });
-</script>
-
+<script src="js/draw.js"></script>
 </body>
-                          </html>
+</html>
